@@ -20,4 +20,28 @@ public class Type {
     @JsonBackReference("exercice-type")
     @Column(nullable = false)
     private List<Exercice> exercices;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public List<Exercice> getExercices() {
+        return exercices;
+    }
+
+    public void setExercices(List<Exercice> exercices) {
+        this.exercices = exercices;
+    }
 }

@@ -41,4 +41,76 @@ public class Exercice {
 
     @Column(nullable = false)
     private Date updated_at;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Muscle getMuscle() {
+        return muscle;
+    }
+
+    public void setMuscle(Muscle muscle) {
+        this.muscle = muscle;
+    }
+
+    public Timestamp getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Timestamp duration) {
+        this.duration = duration;
+    }
+
+    public int getBeginner_rep() {
+        return beginner_rep;
+    }
+
+    public void setBeginner_rep(int beginner_rep) {
+        this.beginner_rep = beginner_rep;
+    }
+
+    public int getIntermediate_rep() {
+        return intermediate_rep;
+    }
+
+    public void setIntermediate_rep(int intermediate_rep) {
+        this.intermediate_rep = intermediate_rep;
+    }
+
+    public int getHar_rep() {
+        return har_rep;
+    }
+
+    public void setHar_rep(int har_rep) {
+        this.har_rep = har_rep;
+    }
+
+    public Date getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(Date created_at) {
+        this.created_at = created_at;
+    }
+
+    public Date getUpdated_at() {
+        return updated_at;
+    }
+
+    public void setUpdated_at(Date updated_at) {
+        this.updated_at = updated_at;
+    }
 }
