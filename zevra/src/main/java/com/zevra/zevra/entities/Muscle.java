@@ -1,6 +1,6 @@
 package com.zevra.zevra.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -16,9 +16,8 @@ public class Muscle {
     @Column(nullable = false)
     private String category;
 
-    @OneToMany
-    @JsonBackReference("exercice-type")
-    @Column(nullable = false)
+    @OneToMany(mappedBy = "muscle")
+    @JsonManagedReference("exercice-muscle")
     private List<Exercice> exercices;
 
     public Long getId() {

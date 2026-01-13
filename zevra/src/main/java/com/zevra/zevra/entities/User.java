@@ -2,9 +2,11 @@ package com.zevra.zevra.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -33,6 +35,10 @@ public class User {
     @JsonBackReference("user-role")
     @JoinColumn(name = "role_id", nullable = false )
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference("favorite-user")
+    private List<Favorite> favorites;
 
     @Column(nullable = false)
     private Date created_at;
@@ -94,6 +100,14 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<Favorite> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<Favorite> favorites) {
+        this.favorites = favorites;
     }
 
     public Date getCreated_at() {

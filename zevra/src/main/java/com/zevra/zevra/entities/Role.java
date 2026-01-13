@@ -1,6 +1,6 @@
 package com.zevra.zevra.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,9 +18,8 @@ public class Role {
     private String permission;
 
     // permet de récupérer la listes des users avec les rôles
-    @OneToMany
-    @JsonBackReference("user-role")
-    @Column(nullable = false)
+    @OneToMany(mappedBy = "role")
+    @JsonManagedReference("user-role")
     private List<User> users;
 
     public Long getId() {

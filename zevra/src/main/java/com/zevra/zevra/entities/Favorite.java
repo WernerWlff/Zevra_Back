@@ -1,5 +1,6 @@
 package com.zevra.zevra.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -18,11 +19,14 @@ public class Favorite {
     @Column(nullable = false)
     private String description;
 
-    //TODO : faire les liens avec les autres tables
-    @Column(nullable = false)
-    private User user_id;
+    @ManyToOne
+    @JsonBackReference("favorite-user")
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @Column(nullable = false)
+    @ManyToOne
+    @JsonBackReference("favorite-exercice")
+    @JoinColumn(name = "exercice_id", nullable = false)
     private Exercice exercice;
 
     @Column(nullable = false)
@@ -55,12 +59,12 @@ public class Favorite {
         this.description = description;
     }
 
-    public User getUser_id() {
-        return user_id;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_id(User user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Exercice getExercice() {

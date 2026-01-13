@@ -1,10 +1,12 @@
 package com.zevra.zevra.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "exercices")
@@ -20,9 +22,13 @@ public class Exercice {
     private Type type;
 
     @ManyToOne
-    @JsonBackReference("exercice-type")
+    @JsonBackReference("exercice-muscle")
     @JoinColumn(nullable = false, name = "muscle_id")
     private Muscle muscle;
+
+    @OneToMany(mappedBy = "exercice")
+    @JsonManagedReference("favorite-exercice")
+    private List<Favorite> favorites;
 
     @Column(nullable = false)
     private Timestamp duration;
@@ -64,6 +70,14 @@ public class Exercice {
 
     public void setMuscle(Muscle muscle) {
         this.muscle = muscle;
+    }
+
+    public List<Favorite> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<Favorite> favorites) {
+        this.favorites = favorites;
     }
 
     public Timestamp getDuration() {
