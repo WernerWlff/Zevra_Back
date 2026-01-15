@@ -38,7 +38,7 @@ public class AuthService {
             throw new RuntimeException("L'email est déjà utilisé");
         }
 
-        Long roleId = request.getRoleId() != null ? request.getRoleId() : 1L;
+        Long roleId = 1L;
         Optional<Role> roleOptional = roleRepository.findById(roleId);
         
         if (roleOptional.isEmpty()) {

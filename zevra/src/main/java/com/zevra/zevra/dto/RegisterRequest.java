@@ -29,8 +29,6 @@ public class RegisterRequest {
     )
     private String password;
 
-    private Long roleId;
-
     public String getFirstname() {
         return firstname;
     }
@@ -71,13 +69,6 @@ public class RegisterRequest {
         this.password = password;
     }
 
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
 
     @Override
     public String toString() {
@@ -86,7 +77,6 @@ public class RegisterRequest {
                 ", lastname='" + lastname + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
-                ", roleId=" + roleId +
                 '}';
     }
 }
