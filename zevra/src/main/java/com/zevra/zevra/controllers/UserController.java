@@ -1,7 +1,9 @@
 package com.zevra.zevra.controllers;
 
+import com.zevra.zevra.dto.UpdateUserRequest;
 import com.zevra.zevra.entities.User;
 import com.zevra.zevra.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,7 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable UUID id) {
         Optional<User> user = userService.getUserById(id);
 
@@ -40,17 +42,21 @@ public class UserController {
         return new ResponseEntity<>(userCreated, HttpStatus.CREATED);
     }
 
-    @PutMapping("/id")
-    public ResponseEntity<User> updateUserById(@PathVariable UUID id, @RequestBody User userDetails) {
-        Optional<User> user = userService.updateUser(id, userDetails);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUserById(@PathVariable UUID id,@Valid @RequestBody UpdateUserRequest request) {
+        try{
+            Optional<User> user = userService.updateUser(id, request);
 
-        if(user.isPresent()){
-            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+            if(user.isPresent()){
+                return new ResponseEntity<>(user.get(), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (RuntimeException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         Optional<User> deletedUser = userService.deleteUser(id);
 

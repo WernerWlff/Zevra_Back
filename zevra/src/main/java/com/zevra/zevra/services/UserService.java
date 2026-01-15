@@ -1,10 +1,12 @@
 package com.zevra.zevra.services;
 
+import com.zevra.zevra.dto.UpdateUserRequest;
 import com.zevra.zevra.entities.User;
 import com.zevra.zevra.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,16 +33,35 @@ public class UserService {
     }
 
     @Transactional
-    public Optional<User>updateUser(UUID id, User user) {
+    public Optional<User>updateUser(UUID id, UpdateUserRequest request) {
         Optional<User> optionalUser = userRepository.findById(id);
 
         if(optionalUser.isPresent()) {
             User existingUser = optionalUser.get();
-            existingUser.setFirstname(user.getFirstname());
-            existingUser.setLastname(user.getLastname());
-            existingUser.setUsername(user.getUsername());
-            existingUser.setEmail(user.getEmail());
-            existingUser.setPassword(user.getPassword());
+
+            if (request.getFirstName() != null) {
+                existingUser.setFirstname(request.getFirstName());
+            }
+
+            if (request.getLastName() != null) {
+                existingUser.setLastname(request.getLastName());
+            }
+
+            if (request.getUsername() != null) {
+                if (userRepository.existsByUsername(request.getUsername()) &&  !existingUser.getUsername().equals(request.getUsername())){
+                    throw new RuntimeException("Ce nom d'utilisateur est déjà utilisé");
+                }
+                existingUser.setUsername(request.getUsername());
+            }
+
+            if (request.getEmail() != null) {
+                if (userRepository.existsByEmail(request.getEmail()) && !existingUser.getEmail().equals(request.getEmail())){
+                    throw new RuntimeException("Cet Email est déjà utilisé");
+                }
+                existingUser.setEmail(request.getEmail());
+            }
+
+            existingUser.setUpdated_at(new Date());
             User savedUser = userRepository.save(existingUser);
             return Optional.of(savedUser);
         }

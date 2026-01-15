@@ -2,6 +2,7 @@ package com.zevra.zevra.services;
 
 import com.zevra.zevra.dto.RegisterRequest;
 import com.zevra.zevra.dto.RegisterResponse;
+import com.zevra.zevra.dto.UpdatePasswordRequest;
 import com.zevra.zevra.entities.Role;
 import com.zevra.zevra.entities.User;
 import com.zevra.zevra.repositories.RoleRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -70,5 +72,22 @@ public class AuthService {
         response.setMessage("Inscription réussie");
 
         return response;
+    }
+
+    @Transactional
+    public void updatePassword(UUID userId, UpdatePasswordRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new RuntimeException("Le mot de passe actuel est incorrect");
+        }
+
+        String hashedPassword = passwordEncoder.encode(request.getNewPassword());
+
+        user.setPassword(hashedPassword);
+        user.setUpdated_at(new Date());
+
+        userRepository.save(user);
     }
 }
