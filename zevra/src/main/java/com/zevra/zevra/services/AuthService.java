@@ -1,8 +1,7 @@
 package com.zevra.zevra.services;
 
-import com.zevra.zevra.dto.RegisterRequest;
-import com.zevra.zevra.dto.RegisterResponse;
-import com.zevra.zevra.dto.UpdatePasswordRequest;
+import com.zevra.zevra.config.JwtUtil;
+import com.zevra.zevra.dto.*;
 import com.zevra.zevra.entities.Role;
 import com.zevra.zevra.entities.User;
 import com.zevra.zevra.repositories.RoleRepository;
@@ -10,7 +9,6 @@ import com.zevra.zevra.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -21,11 +19,13 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public AuthService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,  JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     @Transactional
@@ -89,5 +89,30 @@ public class AuthService {
         user.setUpdated_at(new Date());
 
         userRepository.save(user);
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail());
+
+        if (user == null) {
+            throw new RuntimeException("Email ou mot de passe incorrect");
+        }
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Email ou mot de passe incorrect");
+        }
+
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        LoginResponse response = new LoginResponse();
+        response.setToken(token);
+        response.setId(user.getId());
+        response.setUsername(user.getUsername());
+        response.setEmail(user.getEmail());
+        response.setFirstname(user.getFirstname());
+        response.setLastname(user.getLastname());
+        response.setMessage("Connexion réussie");
+
+        return response;
     }
 }
