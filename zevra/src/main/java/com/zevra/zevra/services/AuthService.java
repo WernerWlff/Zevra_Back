@@ -7,112 +7,118 @@ import com.zevra.zevra.entities.User;
 import com.zevra.zevra.repositories.RoleRepository;
 import com.zevra.zevra.repositories.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
-    
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
 
-    public AuthService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder,  JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
+  private final UserRepository userRepository;
+  private final RoleRepository roleRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final JwtUtil jwtUtil;
+
+  public AuthService(
+      UserRepository userRepository,
+      RoleRepository roleRepository,
+      PasswordEncoder passwordEncoder,
+      JwtUtil jwtUtil) {
+    this.userRepository = userRepository;
+    this.roleRepository = roleRepository;
+    this.passwordEncoder = passwordEncoder;
+    this.jwtUtil = jwtUtil;
+  }
+
+  @Transactional
+  public RegisterResponse register(RegisterRequest request) {
+    if (userRepository.existsByUsername(request.getUsername())) {
+      throw new RuntimeException("Le nom d'utilisateur est déjà utilisé");
     }
 
-    @Transactional
-    public RegisterResponse register(RegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("Le nom d'utilisateur est déjà utilisé");
-        }
-
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("L'email est déjà utilisé");
-        }
-
-        Long roleId = 1L;
-        Optional<Role> roleOptional = roleRepository.findById(roleId);
-        
-        if (roleOptional.isEmpty()) {
-            throw new RuntimeException("Le rôle spécifié n'existe pas");
-        }
-
-        Role role = roleOptional.get();
-
-        String hashedPassword = passwordEncoder.encode(request.getPassword());
-
-        User user = new User();
-        user.setFirstname(request.getFirstname());
-        user.setLastname(request.getLastname());
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
-        user.setPassword(hashedPassword);
-        user.setRole(role);
-
-        Date now = new Date();
-        user.setCreated_at(now);
-        user.setUpdated_at(now);
-
-        User savedUser = userRepository.save(user);
-        
-        RegisterResponse response = new RegisterResponse();
-        response.setId(savedUser.getId());
-        response.setUsername(savedUser.getUsername());
-        response.setEmail(savedUser.getEmail());
-        response.setFirstname(savedUser.getFirstname());
-        response.setLastname(savedUser.getLastname());
-        response.setMessage("Inscription réussie");
-
-        return response;
+    if (userRepository.existsByEmail(request.getEmail())) {
+      throw new RuntimeException("L'email est déjà utilisé");
     }
 
-    @Transactional
-    public void updatePassword(UUID userId, UpdatePasswordRequest request) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+    Long roleId = 1L;
+    Optional<Role> roleOptional = roleRepository.findById(roleId);
 
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new RuntimeException("Le mot de passe actuel est incorrect");
-        }
-
-        String hashedPassword = passwordEncoder.encode(request.getNewPassword());
-
-        user.setPassword(hashedPassword);
-        user.setUpdated_at(new Date());
-
-        userRepository.save(user);
+    if (roleOptional.isEmpty()) {
+      throw new RuntimeException("Le rôle spécifié n'existe pas");
     }
 
-    public LoginResponse login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail());
+    Role role = roleOptional.get();
 
-        if (user == null) {
-            throw new RuntimeException("Email ou mot de passe incorrect");
-        }
+    String hashedPassword = passwordEncoder.encode(request.getPassword());
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Email ou mot de passe incorrect");
-        }
+    User user = new User();
+    user.setFirstname(request.getFirstname());
+    user.setLastname(request.getLastname());
+    user.setUsername(request.getUsername());
+    user.setEmail(request.getEmail());
+    user.setPassword(hashedPassword);
+    user.setRole(role);
 
-        String token = jwtUtil.generateToken(user.getEmail());
+    Date now = new Date();
+    user.setCreated_at(now);
+    user.setUpdated_at(now);
 
-        LoginResponse response = new LoginResponse();
-        response.setToken(token);
-        response.setId(user.getId());
-        response.setUsername(user.getUsername());
-        response.setEmail(user.getEmail());
-        response.setFirstname(user.getFirstname());
-        response.setLastname(user.getLastname());
-        response.setMessage("Connexion réussie");
+    User savedUser = userRepository.save(user);
 
-        return response;
+    RegisterResponse response = new RegisterResponse();
+    response.setId(savedUser.getId());
+    response.setUsername(savedUser.getUsername());
+    response.setEmail(savedUser.getEmail());
+    response.setFirstname(savedUser.getFirstname());
+    response.setLastname(savedUser.getLastname());
+    response.setMessage("Inscription réussie");
+
+    return response;
+  }
+
+  @Transactional
+  public void updatePassword(UUID userId, UpdatePasswordRequest request) {
+    User user =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+    if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+      throw new RuntimeException("Le mot de passe actuel est incorrect");
     }
+
+    String hashedPassword = passwordEncoder.encode(request.getNewPassword());
+
+    user.setPassword(hashedPassword);
+    user.setUpdated_at(new Date());
+
+    userRepository.save(user);
+  }
+
+  public LoginResponse login(LoginRequest request) {
+    User user = userRepository.findByEmail(request.getEmail());
+
+    if (user == null) {
+      throw new RuntimeException("Email ou mot de passe incorrect");
+    }
+
+    if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+      throw new RuntimeException("Email ou mot de passe incorrect");
+    }
+
+    String token = jwtUtil.generateToken(user.getEmail());
+
+    LoginResponse response = new LoginResponse();
+    response.setToken(token);
+    response.setId(user.getId());
+    response.setUsername(user.getUsername());
+    response.setEmail(user.getEmail());
+    response.setFirstname(user.getFirstname());
+    response.setLastname(user.getLastname());
+    response.setMessage("Connexion réussie");
+
+    return response;
+  }
 }
