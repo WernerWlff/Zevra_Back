@@ -1,8 +1,6 @@
 package com.zevra.zevra.controllers;
 
-import com.zevra.zevra.dto.RegisterRequest;
-import com.zevra.zevra.dto.RegisterResponse;
-import com.zevra.zevra.dto.UpdatePasswordRequest;
+import com.zevra.zevra.dto.*;
 import com.zevra.zevra.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -29,6 +27,16 @@ public class AuthController {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+        try {
+            LoginResponse response = authService.login(request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 
