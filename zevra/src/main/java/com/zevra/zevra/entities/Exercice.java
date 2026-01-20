@@ -39,7 +39,7 @@ public class Exercice {
   private int intermediate_rep;
 
   @Column(nullable = true)
-  private int har_rep;
+  private int hard_rep;
 
   @Column(nullable = false)
   private Date created_at;
@@ -103,12 +103,12 @@ public class Exercice {
     this.intermediate_rep = intermediate_rep;
   }
 
-  public int getHar_rep() {
-    return har_rep;
+  public int getHard_rep() {
+    return hard_rep;
   }
 
-  public void setHar_rep(int har_rep) {
-    this.har_rep = har_rep;
+  public void setHard_rep(int har_rep) {
+    this.hard_rep = har_rep;
   }
 
   public Date getCreated_at() {
