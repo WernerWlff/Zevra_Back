@@ -29,6 +29,10 @@ public class Exercice {
   @JsonManagedReference("favorite-exercice")
   private List<Favorite> favorites;
 
+  @OneToMany(mappedBy = "exercice")
+  @JsonManagedReference("training_list-exercice")
+  private List<Training_list> trainingLists;
+
   @Column(nullable = false)
   private Timestamp duration;
 
@@ -77,6 +81,14 @@ public class Exercice {
 
   public void setFavorites(List<Favorite> favorites) {
     this.favorites = favorites;
+  }
+
+  public List<Training_list> getTrainingLists() {
+    return trainingLists;
+  }
+
+  public void setTrainingLists(List<Training_list> trainingLists) {
+    this.trainingLists = trainingLists;
   }
 
   public Timestamp getDuration() {
