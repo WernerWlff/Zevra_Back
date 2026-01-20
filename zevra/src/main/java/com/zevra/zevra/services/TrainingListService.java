@@ -95,11 +95,11 @@ public class TrainingListService {
     Optional<TrainingList> optionalTrainingList = trainingListRepository.findById(id);
 
     if (optionalTrainingList.isPresent()) {
-      TrainingList existingTraining_list = optionalTrainingList.get();
-      existingTraining_list.setName(trainingList.getName());
-      existingTraining_list.setDescription(trainingList.getDescription());
-      existingTraining_list.setUpdated_at(new Date());
-      return Optional.of(trainingListRepository.save(existingTraining_list));
+      TrainingList existingTrainingList = optionalTrainingList.get();
+      existingTrainingList.setName(trainingList.getName());
+      existingTrainingList.setDescription(trainingList.getDescription());
+      existingTrainingList.setUpdated_at(new Date());
+      return Optional.of(trainingListRepository.save(existingTrainingList));
     }
     return Optional.empty();
   }

@@ -18,8 +18,8 @@ public class TrainingListController {
 
   private final TrainingListService trainingListService;
 
-  public TrainingListController(TrainingListService training_listService) {
-    this.trainingListService = training_listService;
+  public TrainingListController(TrainingListService trainingListService) {
+    this.trainingListService = trainingListService;
   }
 
   @GetMapping
