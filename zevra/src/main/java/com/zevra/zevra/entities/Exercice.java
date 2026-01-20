@@ -107,8 +107,8 @@ public class Exercice {
     return hard_rep;
   }
 
-  public void setHard_rep(int har_rep) {
-    this.hard_rep = har_rep;
+  public void setHard_rep(int hard_rep) {
+    this.hard_rep = hard_rep;
   }
 
   public Date getCreated_at() {
