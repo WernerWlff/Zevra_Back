@@ -41,7 +41,7 @@ public class User {
 
   @OneToMany(mappedBy = "user")
   @JsonManagedReference("training_list-user")
-  private List<Training_list> lists;
+  private List<TrainingList> lists;
 
   @Column(nullable = false)
   private Date created_at;
@@ -113,11 +113,11 @@ public class User {
     this.favorites = favorites;
   }
 
-  public List<Training_list> getLists() {
+  public List<TrainingList> getLists() {
     return lists;
   }
 
-  public void setLists(List<Training_list> lists) {
+  public void setLists(List<TrainingList> lists) {
     this.lists = lists;
   }
 

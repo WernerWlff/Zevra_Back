@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "training_lists")
-public class Training_list {
+public class TrainingList {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -14,7 +14,7 @@ public class Training_list {
   @Column(nullable = false)
   private String name;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private String description;
 
   @ManyToOne

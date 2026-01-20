@@ -31,7 +31,7 @@ public class Exercice {
 
   @OneToMany(mappedBy = "exercice")
   @JsonManagedReference("training_list-exercice")
-  private List<Training_list> trainingLists;
+  private List<TrainingList> trainingLists;
 
   @Column(nullable = false)
   private Timestamp duration;
@@ -83,11 +83,11 @@ public class Exercice {
     this.favorites = favorites;
   }
 
-  public List<Training_list> getTrainingLists() {
+  public List<TrainingList> getTrainingLists() {
     return trainingLists;
   }
 
-  public void setTrainingLists(List<Training_list> trainingLists) {
+  public void setTrainingLists(List<TrainingList> trainingLists) {
     this.trainingLists = trainingLists;
   }
 
