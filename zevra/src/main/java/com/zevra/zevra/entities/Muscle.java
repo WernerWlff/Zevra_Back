@@ -12,8 +12,11 @@ public class Muscle {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(name = "muscle_targeted", nullable = false)
+  private String muscleTargeted;
+
   @Column(nullable = false)
-  private String category;
+  private String area;
 
   @OneToMany(mappedBy = "muscle")
   @JsonManagedReference("exercice-muscle")
@@ -27,12 +30,20 @@ public class Muscle {
     this.id = id;
   }
 
-  public String getCategory() {
-    return category;
+  public String getMuscleTargeted() {
+    return muscleTargeted;
   }
 
-  public void setCategory(String category) {
-    this.category = category;
+  public void setMuscleTargeted(String muscleTargeted) {
+    this.muscleTargeted = muscleTargeted;
+  }
+
+  public String getArea() {
+    return area;
+  }
+
+  public void setArea(String area) {
+    this.area = area;
   }
 
   public List<Exercice> getExercices() {
