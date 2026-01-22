@@ -3,7 +3,7 @@ package com.zevra.zevra.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class AddExerciseToTrainingListRequest {
+public class AddExerciceToTrainingListRequest {
 
   @NotNull(message = "L'exercice est obligatoire")
   private Long exercice_id;
