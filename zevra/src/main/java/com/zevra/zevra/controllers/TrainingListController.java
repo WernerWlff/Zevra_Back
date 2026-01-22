@@ -1,6 +1,6 @@
 package com.zevra.zevra.controllers;
 
-import com.zevra.zevra.dto.AddExerciseToTrainingListRequest;
+import com.zevra.zevra.dto.AddExerciceToTrainingListRequest;
 import com.zevra.zevra.entities.TrainingList;
 import com.zevra.zevra.services.TrainingListService;
 import jakarta.validation.Valid;
@@ -41,10 +41,10 @@ public class TrainingListController {
   }
 
   @GetMapping("/user/{userId}/list/{listName}")
-  public ResponseEntity<List<TrainingList>> getExercisesByListName(
+  public ResponseEntity<List<TrainingList>> getExercicesByListName(
       @PathVariable UUID userId, @PathVariable String listName) {
-    List<TrainingList> exercises = trainingListService.getExercisesByListName(userId, listName);
-    return new ResponseEntity<>(exercises, HttpStatus.OK);
+    List<TrainingList> exercices = trainingListService.getExercicesByListName(userId, listName);
+    return new ResponseEntity<>(exercices, HttpStatus.OK);
   }
 
   @GetMapping("/{id}")
@@ -57,12 +57,12 @@ public class TrainingListController {
         Map.of("message", "Liste d'entraînement non trouvée"), HttpStatus.NOT_FOUND);
   }
 
-  @PostMapping("/user/{userId}/exercises")
-  public ResponseEntity<?> addExerciseToTrainingList(
-      @PathVariable UUID userId, @Valid @RequestBody AddExerciseToTrainingListRequest request) {
+  @PostMapping("/user/{userId}/exercices")
+  public ResponseEntity<?> addExerciceToTrainingList(
+      @PathVariable UUID userId, @Valid @RequestBody AddExerciceToTrainingListRequest request) {
     try {
       TrainingList trainingList =
-          trainingListService.addExerciseToTrainingList(
+          trainingListService.addExerciceToTrainingList(
               userId, request.getExercice_id(), request.getName(), request.getDescription());
       return new ResponseEntity<>(trainingList, HttpStatus.CREATED);
     } catch (RuntimeException e) {
@@ -92,10 +92,10 @@ public class TrainingListController {
         Map.of("message", "Liste d'entraînement non trouvée"), HttpStatus.NOT_FOUND);
   }
 
-  @DeleteMapping("/user/{userId}/list/{listName}/exercise/{exerciceId}")
-  public ResponseEntity<?> removeExerciseFromList(
+  @DeleteMapping("/user/{userId}/list/{listName}/exercice/{exerciceId}")
+  public ResponseEntity<?> removeExerciceFromList(
       @PathVariable UUID userId, @PathVariable String listName, @PathVariable Long exerciceId) {
-    boolean deleted = trainingListService.removeExerciseFromList(userId, listName, exerciceId);
+    boolean deleted = trainingListService.removeExerciceFromList(userId, listName, exerciceId);
     if (deleted) {
       return new ResponseEntity<>(Map.of("message", "Exercice retiré de la liste"), HttpStatus.OK);
     }

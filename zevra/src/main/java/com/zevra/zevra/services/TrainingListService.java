@@ -37,7 +37,7 @@ public class TrainingListService {
     return trainingListRepository.findByUserId(userId);
   }
 
-  public List<TrainingList> getExercisesByListName(UUID userId, String listName) {
+  public List<TrainingList> getExercicesByListName(UUID userId, String listName) {
     return trainingListRepository.findByUserIdAndName(userId, listName);
   }
 
@@ -56,7 +56,7 @@ public class TrainingListService {
   }
 
   @Transactional
-  public TrainingList addExerciseToTrainingList(
+  public TrainingList addExerciceToTrainingList(
       UUID userId, Long exerciceId, String name, String description) {
 
     User user =
@@ -70,10 +70,10 @@ public class TrainingListService {
             .orElseThrow(() -> new RuntimeException("Exercice non trouvé"));
 
     List<TrainingList> existingEntries = trainingListRepository.findByUserIdAndName(userId, name);
-    boolean exerciseAlreadyInList =
+    boolean exerciceAlreadyInList =
         existingEntries.stream().anyMatch(tl -> tl.getExercice().getId().equals(exerciceId));
 
-    if (exerciseAlreadyInList) {
+    if (exerciceAlreadyInList) {
       throw new RuntimeException("Cet exercice est déjà présent dans cette liste");
     }
 
@@ -114,7 +114,7 @@ public class TrainingListService {
   }
 
   @Transactional
-  public boolean removeExerciseFromList(UUID userId, String listName, Long exerciceId) {
+  public boolean removeExerciceFromList(UUID userId, String listName, Long exerciceId) {
     List<TrainingList> listEntries = trainingListRepository.findByUserIdAndName(userId, listName);
     Optional<TrainingList> toDelete =
         listEntries.stream().filter(tl -> tl.getExercice().getId().equals(exerciceId)).findFirst();
