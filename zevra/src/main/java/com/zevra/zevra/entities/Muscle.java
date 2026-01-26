@@ -1,6 +1,6 @@
 package com.zevra.zevra.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class Muscle {
   private String area;
 
   @OneToMany(mappedBy = "muscle")
-  @JsonManagedReference("exercice-muscle")
+  @JsonIgnore
   private List<Exercice> exercices;
 
   public Long getId() {
