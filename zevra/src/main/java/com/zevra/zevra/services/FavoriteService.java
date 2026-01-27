@@ -1,5 +1,6 @@
 package com.zevra.zevra.services;
 
+import com.zevra.zevra.dto.FavoriteResponse;
 import com.zevra.zevra.entities.Exercice;
 import com.zevra.zevra.entities.Favorite;
 import com.zevra.zevra.entities.User;
@@ -7,6 +8,7 @@ import com.zevra.zevra.repositories.ExerciceRepository;
 import com.zevra.zevra.repositories.FavoriteRepository;
 import com.zevra.zevra.repositories.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -28,20 +30,30 @@ public class FavoriteService {
     this.exerciceRepository = exerciceRepository;
   }
 
-  public List<Favorite> getAllFavorites() {
-    return favoriteRepository.findAll();
+  public List<FavoriteResponse> getAllFavorites() {
+    List<Favorite> favorites = favoriteRepository.findAll();
+    List<FavoriteResponse> result = new ArrayList<>();
+    for (Favorite favorite : favorites) {
+      result.add(toResponse(favorite));
+    }
+    return result;
   }
 
-  public List<Favorite> getFavoriteByUserId(UUID userId) {
-    return favoriteRepository.findByUserId(userId);
+  public List<FavoriteResponse> getFavoriteByUserId(UUID userId) {
+    List<Favorite> favorites = favoriteRepository.findByUserId(userId);
+    List<FavoriteResponse> result = new ArrayList<>();
+    for (Favorite favorite : favorites) {
+      result.add(toResponse(favorite));
+    }
+    return result;
   }
 
-  public Optional<Favorite> getFavoriteById(Long id) {
-    return favoriteRepository.findById(id);
+  public Optional<FavoriteResponse> getFavoriteById(Long id) {
+    return favoriteRepository.findById(id).map(this::toResponse);
   }
 
   @Transactional
-  public Favorite addExerciceToFavorite(
+  public FavoriteResponse addExerciceToFavorite(
       UUID userId, Long exerciceId, String name, String description) {
     User user =
         userRepository
@@ -69,7 +81,8 @@ public class FavoriteService {
     favorite.setCreated_at(now);
     favorite.setUpdated_at(now);
 
-    return favoriteRepository.save(favorite);
+    Favorite saved = favoriteRepository.save(favorite);
+    return toResponse(saved);
   }
 
   @Transactional
@@ -89,5 +102,26 @@ public class FavoriteService {
       return true;
     }
     return false;
+  }
+
+  private FavoriteResponse toResponse(Favorite favorite) {
+    FavoriteResponse response = new FavoriteResponse();
+    response.setId(favorite.getId());
+    response.setExerciceId(favorite.getExercice().getId());
+    response.setName(favorite.getName());
+    response.setDescription(favorite.getDescription());
+    response.setCreated_at(favorite.getCreated_at());
+    response.setUpdated_at(favorite.getUpdated_at());
+
+    Exercice exercice = favorite.getExercice();
+    if (exercice != null) {
+      if (exercice.getType() != null) {
+        response.setExerciceType(exercice.getType().getCategory());
+      }
+      if (exercice.getMuscle() != null) {
+        response.setExerciceMuscle(exercice.getMuscle().getMuscleTargeted());
+      }
+    }
+    return response;
   }
 }

@@ -1,6 +1,7 @@
 package com.zevra.zevra.controllers;
 
 import com.zevra.zevra.dto.AddExerciceToFavoriteRequest;
+import com.zevra.zevra.dto.FavoriteResponse;
 import com.zevra.zevra.entities.Favorite;
 import com.zevra.zevra.services.FavoriteService;
 import jakarta.validation.Valid;
@@ -21,18 +22,18 @@ public class FavoriteController {
   }
 
   @GetMapping
-  public ResponseEntity<List<Favorite>> getAllFavorites() {
+  public ResponseEntity<List<FavoriteResponse>> getAllFavorites() {
     return new ResponseEntity<>(favoriteService.getAllFavorites(), HttpStatus.OK);
   }
 
   @GetMapping("/user/{userId}")
-  public ResponseEntity<List<Favorite>> getFavoritesByUser(@PathVariable UUID userId) {
+  public ResponseEntity<List<FavoriteResponse>> getFavoritesByUser(@PathVariable UUID userId) {
     return new ResponseEntity<>(favoriteService.getFavoriteByUserId(userId), HttpStatus.OK);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Favorite> getFavoriteById(@PathVariable Long id) {
-    Optional<Favorite> favorite = favoriteService.getFavoriteById(id);
+  public ResponseEntity<FavoriteResponse> getFavoriteById(@PathVariable Long id) {
+    Optional<FavoriteResponse> favorite = favoriteService.getFavoriteById(id);
     if (favorite.isPresent()) {
       return new ResponseEntity<>(favorite.get(), HttpStatus.OK);
     }
@@ -43,7 +44,7 @@ public class FavoriteController {
   public ResponseEntity<?> addExerciceToFavorite(
       @PathVariable UUID userId, @Valid @RequestBody AddExerciceToFavoriteRequest request) {
     try {
-      Favorite favorite =
+      FavoriteResponse favorite =
           favoriteService.addExerciceToFavorite(
               userId, request.getExercice_id(), request.getName(), request.getDescription());
       return new ResponseEntity<>(favorite, HttpStatus.CREATED);
