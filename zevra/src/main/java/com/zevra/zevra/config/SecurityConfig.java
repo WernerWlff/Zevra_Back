@@ -4,6 +4,7 @@ import com.zevra.zevra.services.CustomUserDetailsService;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,7 +44,9 @@ public class SecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/api/register", "/api/login", "/api/muscles", "/api/types")
+                auth.requestMatchers(HttpMethod.GET, "/api/exercices", "/api/exercices/**")
+                    .permitAll()
+                    .requestMatchers("/api/register", "/api/login", "/api/muscles", "/api/types")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
