@@ -1,6 +1,6 @@
 package com.zevra.zevra.entities;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class Type {
   private String category;
 
   @OneToMany(mappedBy = "type")
-  @JsonManagedReference("exercice-type")
+  @JsonIgnore
   private List<Exercice> exercices;
 
   public Long getId() {

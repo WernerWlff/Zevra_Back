@@ -1,6 +1,5 @@
 package com.zevra.zevra.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.sql.Date;
@@ -16,12 +15,10 @@ public class Exercice {
   private Long id;
 
   @ManyToOne
-  @JsonBackReference("exercice-type")
   @JoinColumn(nullable = false, name = "type_id")
   private Type type;
 
   @ManyToOne
-  @JsonBackReference("exercice-muscle")
   @JoinColumn(nullable = false, name = "muscle_id")
   private Muscle muscle;
 
