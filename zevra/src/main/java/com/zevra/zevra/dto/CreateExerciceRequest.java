@@ -1,9 +1,13 @@
 package com.zevra.zevra.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 public class CreateExerciceRequest {
+
+  @NotBlank(message = "Le nom est obligatoire")
+  private String name;
 
   @NotNull(message = "Le type est obligatoire")
   private Long type_id;
@@ -26,6 +30,14 @@ public class CreateExerciceRequest {
 
   public void setType_id(Long type_id) {
     this.type_id = type_id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public Long getMuscle_id() {
