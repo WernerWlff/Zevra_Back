@@ -49,6 +49,7 @@ public class ExerciceService {
             .orElseThrow(() -> new RuntimeException("Muscle non trouvé"));
 
     Exercice exercice = new Exercice();
+    exercice.setName(request.getName());
     exercice.setType(type);
     exercice.setMuscle(muscle);
     exercice.setDuration(request.getDuration());
@@ -78,6 +79,10 @@ public class ExerciceService {
 
     if (optionalExercice.isPresent()) {
       Exercice existingExercice = optionalExercice.get();
+
+      if (request.getName() != null) {
+        existingExercice.setName(request.getName());
+      }
 
       if (request.getType_id() != null) {
         Type type =

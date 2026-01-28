@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 
 public class UpdateExerciceRequest {
 
+  private String name;
+
   private Long type_id;
 
   private Long muscle_id;
@@ -22,6 +24,14 @@ public class UpdateExerciceRequest {
 
   public void setType_id(Long type_id) {
     this.type_id = type_id;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public Long getMuscle_id() {

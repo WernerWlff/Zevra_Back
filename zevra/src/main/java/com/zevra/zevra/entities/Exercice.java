@@ -22,6 +22,9 @@ public class Exercice {
   @JoinColumn(nullable = false, name = "muscle_id")
   private Muscle muscle;
 
+  @Column(nullable = false, length = 100)
+  private String name;
+
   @OneToMany(mappedBy = "exercice")
   @JsonManagedReference("favorite-exercice")
   private List<Favorite> favorites;
@@ -70,6 +73,14 @@ public class Exercice {
 
   public void setMuscle(Muscle muscle) {
     this.muscle = muscle;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public List<Favorite> getFavorites() {
