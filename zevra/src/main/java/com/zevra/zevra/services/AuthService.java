@@ -42,11 +42,10 @@ public class AuthService {
       throw new RuntimeException("L'email est déjà utilisé");
     }
 
-    Long roleId = 1L;
-    Optional<Role> roleOptional = roleRepository.findById(roleId);
+    Optional<Role> roleOptional = roleRepository.findByPermission("USER");
 
     if (roleOptional.isEmpty()) {
-      throw new RuntimeException("Le rôle spécifié n'existe pas");
+      throw new RuntimeException("Le rôle USER n'existe pas dans la base de donnée");
     }
 
     Role role = roleOptional.get();
